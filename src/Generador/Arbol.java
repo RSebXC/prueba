@@ -18,6 +18,31 @@ public class Arbol {
  public String lexema;
  public Object resultado;
 
+    public ArrayList<Arbol> getHijos() {
+        return hijos;
+    }
+
+    public void setHijos(ArrayList<Arbol> hijos) {
+        this.hijos = hijos;
+    }
+
+    public String getLexema() {
+        return lexema;
+    }
+
+    public void setLexema(String lexema) {
+        this.lexema = lexema;
+    }
+
+    public Object getResultado() {
+        return resultado;
+    }
+
+    public void setResultado(Object resultado) {
+        this.resultado = resultado;
+    }
+ 
+ 
     public Arbol(String lexema) {
         this.lexema = lexema;
         hijos = new ArrayList();
@@ -31,11 +56,13 @@ public class Arbol {
     public void recorrer(Arbol raiz, ArrayList<Simbolo> Tabla){
         
         for(Arbol a: raiz.hijos){
-            
+            System.out.println(raiz.hijos.get(0).lexema);
             recorrer(a, Tabla);
         }
-        if(raiz.lexema == "expresion" && raiz.hijos.size() == 1){
-            System.out.println("aqui nomas");
+        //System.out.println(raiz.hijos.get(0).lexema);
+        //System.out.println("Entrando al if");
+        if("expresion".equals(raiz.lexema) && raiz.hijos.size() == 1){
+            
             raiz.resultado = raiz.hijos.get(0).lexema;
         }else if (raiz.lexema == "expresion" && raiz.hijos.size() == 5){
             if(raiz.hijos.get(0).lexema.equalsIgnoreCase("SUM(")){
@@ -50,17 +77,41 @@ public class Arbol {
                raiz.resultado = res;
             }else if(raiz.hijos.get(0).lexema.equalsIgnoreCase("MUL(")){
                Double mul = Double.parseDouble(raiz.hijos.get(1).resultado.toString()) * Double.parseDouble(raiz.hijos.get(3).resultado.toString());
+               System.out.println(mul);
                raiz.resultado = mul;
+               
             }else if(raiz.hijos.get(0).lexema.equalsIgnoreCase("DIV(")){
                Double div = Double.parseDouble(raiz.hijos.get(1).resultado.toString()) / Double.parseDouble(raiz.hijos.get(3).resultado.toString());
+               System.out.println(div);
                raiz.resultado = div;
             }else if(raiz.hijos.get(0).lexema.equalsIgnoreCase("MOD(")){
                Double mod = Double.parseDouble(raiz.hijos.get(1).resultado.toString()) % Double.parseDouble(raiz.hijos.get(3).resultado.toString());
+               System.out.println(mod);
                raiz.resultado = mod;
-            } else if (raiz.hijos.get(0).lexema.equalsIgnoreCase("Media(")){
-                System.out.println("mediaaaa");
-                System.out.println(raiz.hijos.get(1).resultado.toString());
+            } 
+            else if (raiz.hijos.get(0).lexema.equalsIgnoreCase("Media(")) {
+                System.out.println("Calculando Media");
+
+                Arbol listaValoresArbol = raiz.hijos.get(1);
+
+                if ("list_arreglos".equalsIgnoreCase(listaValoresArbol.lexema) && listaValoresArbol.hijos.size() > 0) {
+                    ArrayList<Object> listaValores = (ArrayList<Object>) listaValoresArbol.hijos.get(0).resultado;
+
+                    double suma = 0;
+
+                    for (Object elemento : listaValores) {
+                        suma += Double.parseDouble(elemento.toString());
+                    }
+
+                    double media = suma / listaValores.size();
+                    System.out.println("La media es: " + media);
+
+                    raiz.resultado = media;
+                } else {
+                    System.out.println("Error: No se pudo obtener la lista de valores para el cálculo de la media.");
+                }
             }
+
                 /*Object media = calcularMedia(raiz.hijos.get(1).resultado.toString());
                 System.out.println("La media es: " + media);
     
@@ -88,8 +139,11 @@ public class Arbol {
             raiz.resultado = "";
         }
         else if (raiz.lexema=="list_var"){
+            
             Simbolo nuevoS = new Simbolo(raiz.hijos.get(5).lexema,raiz.hijos.get(2).lexema,raiz.hijos.get(8).lexema);
+            Globales.Variables.put(raiz.hijos.get(5).lexema.toString(), raiz.hijos.get(8).lexema.toString());
             Tabla.add(nuevoS);
+            
         }else if (raiz.lexema=="list_arreglos" && raiz.hijos.size() == 1){
             ArrayList<Object> list = new ArrayList();
             list.add(raiz.hijos.get(0).resultado);
@@ -172,6 +226,10 @@ public static double encontrarMinimo(double[] arreglo) {
 
 
 */
+
+
+
+  
 
 
 

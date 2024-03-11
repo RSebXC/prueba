@@ -25,7 +25,8 @@ public class OC1_Proyecto1 {
      */
     public static void main(String[] args) {
         try {
-            String text = "PROGRAM arr: char :: @carray <- [12, 2, 3] end; Media(1,2,3) END PROGRAM";
+            String text = "PROGRAM SUM(2,3) RES(2,3) MUL(2,3) DIV(2,3)  MOD(2,3) arr: double :: @carray <- [12, 2, 3] end; var:double:: numero <- 2.5 end; Media([1,2,3]) console :: print = \"hola\", numero, 15, \"adios\" end;  END PROGRAM";
+
             Scanner scanner = new Scanner(new BufferedReader(new StringReader(text)));
             Parser parser = new Parser(scanner);
             Arbol raiz = (Arbol) parser.parse().value;

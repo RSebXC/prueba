@@ -29,30 +29,24 @@ ID = [a-zA-Z][a-zA-Z0-9]*
 
 %%
 
-"program" { return new Symbol(sym.PROGRAM, yyline, yycolumn, yytext()); }
-"end program" { return new Symbol(sym.END_PROGRAM, yyline, yycolumn, yytext()); }
+"program" { Globales.tokens.add(new Token("program",yyline, yycolumn, yytext()));
+ return new Symbol(sym.PROGRAM, yyline, yycolumn, yytext()); }
+"end program" {Globales.tokens.add(new Token("program",yyline, yycolumn, yytext())); return new Symbol(sym.END_PROGRAM, yyline, yycolumn, yytext()); }
 
 "var" { return new Symbol(sym.VAR, yyline, yycolumn, yytext()); }
 "end" { return new Symbol(sym.END_VAR, yyline, yycolumn, yytext()); }
-
-"!"[^\n]*\n   { /* Ignorar comentarios de una línea */ }
-
-"<!"[^!]*!>{ENTERO}   { /* Ignorar comentarios multilínea */ }
-
-
-
 
 "SUM(" { return new Symbol(sym.OP, yyline, yycolumn, yytext()); }
 "RES(" { return new Symbol(sym.OP, yyline, yycolumn, yytext()); }
 "MUL(" { return new Symbol(sym.OP, yyline, yycolumn, yytext()); }
 "DIV(" { return new Symbol(sym.OP, yyline, yycolumn, yytext()); }
 "MOD(" { return new Symbol(sym.OP, yyline, yycolumn, yytext()); }
-"Media(" { return new Symbol(sym.OP, yyline, yycolumn, yytext()); }
-"Mediana(" { return new Symbol(sym.OP, yyline, yycolumn, yytext()); }
-"Moda(" { return new Symbol(sym.OP, yyline, yycolumn, yytext()); }
-"Varianza(" { return new Symbol(sym.OP, yyline, yycolumn, yytext()); }
-"Max(" { return new Symbol(sym.OP, yyline, yycolumn, yytext()); }
-"Min(" { return new Symbol(sym.OP, yyline, yycolumn, yytext()); }
+"Media(" { return new Symbol(sym.ES, yyline, yycolumn, yytext()); }
+"Mediana(" { return new Symbol(sym.ES, yyline, yycolumn, yytext()); }
+"Moda(" { return new Symbol(sym.ES, yyline, yycolumn, yytext()); }
+"Varianza(" { return new Symbol(sym.ES, yyline, yycolumn, yytext()); }
+"Max(" { return new Symbol(sym.ES, yyline, yycolumn, yytext()); }
+"Min(" { return new Symbol(sym.ES, yyline, yycolumn, yytext()); }
 {WHITE}   {}
 
 {ENTERO}    { return new Symbol(sym.ENTERO, yyline, yycolumn, yytext()); }
@@ -79,7 +73,12 @@ ID = [a-zA-Z][a-zA-Z0-9]*
 {CADENA}   { return new Symbol(sym.CADENA, yyline, yycolumn, yytext()); }
 {DECIMAL}   { return new Symbol(sym.DECIMAL, yyline, yycolumn, yytext()); }
 "=" { return new Symbol(sym.IGUAL, yyline, yycolumn, yytext()); }
+"!"[^\n]*\n   { /* Ignorar comentarios de una línea */ }
+
+"<!"[^!]*!>{ENTERO}   { /* Ignorar comentarios multilínea */ }
 
 . {
-    System.out.println("Lexical error: "+yytext()+" linea: "+yyline+" columna: "+yycolumn);
+   Globales.errores.add(new Token("Error lexico",yyline, yycolumn, yytext()));
+ System.out.println("Lexical error: "+yytext()+" linea: "+yyline+" columna: "+yycolumn);
+    throw new RuntimeException("Error léxico en la entrada");
 }
